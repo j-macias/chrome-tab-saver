@@ -56,7 +56,7 @@ function updatePopupDOM(container) {
         }
     });
 }
-//
+//given a timestamp key string, loads from storage the URLs and opens them in new tabs
 function loadSession(saveKey) {
     chrome.storage.sync.get(saveKey, function (items) {
         if (!chrome.runtime.lastError) {
@@ -67,6 +67,16 @@ function loadSession(saveKey) {
                     url: url
                 });
             }
+        }
+        deleteSession(saveKey);
+    });
+}
+//given a key string time stamp, deletes the entry from storage, and if successful,
+//updates the popup DOM
+function deleteSession(key) {
+    chrome.storage.sync.remove(key, function () {
+        if (!chrome.runtime.lastError) {
+            updatePopupDOM(document.getElementById("load-container"));
         }
     });
 }

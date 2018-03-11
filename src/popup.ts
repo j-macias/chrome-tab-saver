@@ -54,7 +54,7 @@ function updatePopupDOM(container:HTMLElement|null) {
   });
 }
 
-//
+//given a timestamp key string, loads from storage the URLs and opens them in new tabs
 function loadSession(saveKey:string) {
   chrome.storage.sync.get(saveKey, (items) => {
     if (!chrome.runtime.lastError) {
@@ -65,7 +65,18 @@ function loadSession(saveKey:string) {
         });
       }
     }
+    deleteSession(saveKey);
   })
+}
+
+//given a key string time stamp, deletes the entry from storage, and if successful,
+//updates the popup DOM
+function deleteSession(key:string) {
+  chrome.storage.sync.remove(key, () => {
+    if (!chrome.runtime.lastError) {
+      updatePopupDOM(document.getElementById("load-container"));
+    }
+  });
 }
 
 //initialization script and event listeners
@@ -88,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     console.log("Error: Save span not found");
   }
-  
 });
 
 
