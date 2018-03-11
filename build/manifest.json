@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+  
+    "name": "Chrome Tab Saver",
+    "description": "Allows saving the selected tabs' URLs for reloading at a later time.",
+    "version": "1.0",
+  
+    "browser_action": {
+      "default_icon": "icon.png",
+      "default_popup": "popup.html",
+      "default_title": "Tab Saver"
+    },
+    "icons": {
+      "48": "icon48.png"
+    },
+    "permissions": [
+      "activeTab",
+      "tabs",
+      "storage"
+    ]
+  }
