@@ -41,11 +41,31 @@ function closeTabs(tabs) {
 function updatePopupDOM(container) {
     chrome.storage.sync.get(null, function (savedItems) {
         if (!chrome.runtime.lastError && container != null) {
-            for (var saveItem in savedItems) {
+            var _loop_1 = function (saveKey) {
                 var newSpan = document.createElement("span");
-                newSpan.id, newSpan.textContent = saveItem;
+                newSpan.id, newSpan.textContent = saveKey;
                 container.appendChild(newSpan);
                 container.appendChild(document.createElement("br"));
+                newSpan.addEventListener('click', function () {
+                    loadSession(saveKey);
+                });
+            };
+            for (var saveKey in savedItems) {
+                _loop_1(saveKey);
+            }
+        }
+    });
+}
+//
+function loadSession(saveKey) {
+    chrome.storage.sync.get(saveKey, function (items) {
+        if (!chrome.runtime.lastError) {
+            var savedUrls = items[saveKey];
+            for (var _i = 0, savedUrls_1 = savedUrls; _i < savedUrls_1.length; _i++) {
+                var url = savedUrls_1[_i];
+                chrome.tabs.create({
+                    url: url
+                });
             }
         }
     });
@@ -53,7 +73,8 @@ function updatePopupDOM(container) {
 //initialization script and event listeners
 document.addEventListener('DOMContentLoaded', function () {
     var loadDiv = document.getElementById("load-container");
-    updatePopupDOM(loadDiv); //populate load list each time extension is clicked
+    //populate load list and listeners each time extension is clicked
+    updatePopupDOM(loadDiv);
     //save event listener
     var saveSpan = document.getElementById("save-tabs");
     if (saveSpan != null) {
@@ -68,6 +89,5 @@ document.addEventListener('DOMContentLoaded', function () {
     else {
         console.log("Error: Save span not found");
     }
-    //load event listener
 });
 //# sourceMappingURL=popup.js.map
